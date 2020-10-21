@@ -32,6 +32,11 @@ docker ps
 docker images
 ```
 
+### How To Spin a new container e.g. in this case I am spinning a redis container
+```docker
+docker run redis
+```
+
 ### run the latest container from an image
 ```docker
 docker run imagename:tag
@@ -57,5 +62,48 @@ docker run -d 256837:80 nginx:latest
 ```docker
 docker run -d -p 3000:80 -p 8080:80 nginx:latest
 ```
+
+### How To Restart A Container
+```docker
+docker stop 252656837c263727
+docker start 252656837c263727
+```
+
+### Say you finished your day and the next day you do not recall which container you ran
+### because docker ps doesn't show you the full list well -a shows you the running and stopped 
+### container
+```docker
+docker ps -a
+```
+
+### Sometimes some users phone do not support the latest version which is 5.0 and you want
+### to keep version 4.0 so you can run the image 4.0 and 5.0 the bottom command pulls and start container
+```docker
+docker run redis:4.0
+```
+
+
+### Ports 
+```
+I must create a binding port between my local machine and the container.
+So say my container is listening on port 3000 I must bind the listening
+port 3000 on my machine to the container port 3000
+
+IF YOU OPEN TWO OF THE SAME PORTS(ON YOUR MACHINE) AND MAP THEM TO DIFFERENT PORTS ON THE CONTAINER
+YOU WILL FACE A PROBLEM
+
+HOWEVER IF YOU TWO DIFFERENT PORTS ON YOUR MACHINE TO THE SAME PORT IN THE CONTAINER THAT IS OKAY
+```
+
+
+### DEBUGGING CONTAINERS
+```docker
+docker logs
+```
+
+```docker
+docker exec -it
+```
+
 
 
