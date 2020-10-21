@@ -21,6 +21,11 @@ To run an nginx container:
 ```docker
 docker pull nginx
 ```
+### Check if there is any running container
+```docker
+docker ps
+```
+
 
 ### To see the list of running images
 ```docker
