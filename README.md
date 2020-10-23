@@ -10,7 +10,77 @@ Imagine I deploy an image to production and my application was not error free. I
 roll back to the previous image.
 An image contains all the necessities for my application to run: OS, Software and Application Code.
 
+The first layer in the stack is called the base image it can be: a basic OS(e.g. Ubuntu, Debian, Fedora), prepackaged sdk
+or application(e.g. Python or Nginx) or a custom image I created.
+
+On top of the base image docker can stack any number of additional layers that modifying the base image
+by adding/changing or removing files and dirs
+
+It is worth remembering that every layer contains a large difference between its preceding layer in the
+stack.
 ```
+
+### HOW To Create A Docker Image 
+```
+Creating a dockerfile is similar to a text file
+RUN is the command used to run shell commands during the container build
+for installing packages or compile code or run tests
+
+LAST CMD to specify a command docker will run automatically after starting the container
+```
+
+```
+FROM debian:buster
+COPY . /myproject
+RUN pip install flask
+CMD ["python", "app.py"]
+
+```
+
+### I create the docker file give it a name of Dockerfile
+```
+I tell docker to download the image from docker hub 
+I then want to copy the project directory into the container
+To install python packages from the requirements.txt file
+To run shell commands during the container build I use the
+RUN directive and follow it with the shell commandd I want
+to execute
+Next I tell docker how to run the flask app once the container
+is launched using CMD and within square brackets and between
+quotes I supply it with the shell command
+ONLY ONE CMD WILL GET READ BY DOCKER IF YOU SUPPLY PLENTY
+only the last one will take effect
+NOW SINCE workdir is specified I replace myproject with a dot
+```
+
+```
+FROM python:3.9
+COPY . /myproject
+RUN pip install -r /myproject/requirements.txt
+CMD ["python", "/myproject/nelanisthebiggestpintosfanb.py"]
+
+```
+
+```
+FROM python:3.9
+WORKDIR /myproject
+COPY . .
+RUN pip install -r requirements.txt
+CMD ["python", "nelanisthebiggestpintosfanb.py"]
+```
+
+
+### To build the docker file
+```
+docker build --file Dockerfile
+```
+
+#### How to create an image from the docker file make sure you are within your docker project because it will search
+#### for the dockerfile
+```
+docker build .
+```
+
 
 ### Container
 ```
@@ -20,6 +90,11 @@ To run an nginx container:
 
 ```docker
 docker pull nginx
+```
+
+### WORKDIR
+```
+sets the current working directory in the container
 ```
 ### Check if there is any running container
 ```docker
@@ -104,6 +179,3 @@ docker logs
 ```docker
 docker exec -it
 ```
-
-
-
