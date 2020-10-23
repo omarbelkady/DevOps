@@ -151,8 +151,7 @@ docker start 252656837c263727
 docker ps -a
 ```
 
-### Sometimes some users phone do not support the latest version which is 5.0 and you want
-### to keep version 4.0 so you can run the image 4.0 and 5.0 the bottom command pulls and start container
+### Sometimes some users phone do not support the latest version which is 5.0 and you want to keep version 4.0 so you can run the image 4.0 and 5.0 the bottom command pulls and start container
 ```docker
 docker run redis:4.0
 ```
@@ -166,7 +165,6 @@ port 3000 on my machine to the container port 3000
 
 IF YOU OPEN TWO OF THE SAME PORTS(ON YOUR MACHINE) AND MAP THEM TO DIFFERENT PORTS ON THE CONTAINER
 YOU WILL FACE A PROBLEM
-
 HOWEVER IF YOU TWO DIFFERENT PORTS ON YOUR MACHINE TO THE SAME PORT IN THE CONTAINER THAT IS OKAY
 ```
 
