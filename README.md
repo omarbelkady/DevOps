@@ -1,5 +1,6 @@
-# Docker Fundamentals
+# DevOps
 
+## Docker
 ### Images
 ```
 An image is a template for creating an environment of your choice. This environment can be a DB, Web App
@@ -20,7 +21,7 @@ It is worth remembering that every layer contains a large difference between its
 stack.
 ```
 
-### HOW To Create A Docker Image 
+### DOCKER: How To Create A Docker Image 
 ```
 Creating a dockerfile is similar to a text file
 RUN is the command used to run shell commands during the container build
@@ -37,7 +38,7 @@ CMD ["python", "app.py"]
 
 ```
 
-### I create the docker file give it a name of Dockerfile
+### DOCKER: I create the docker file give it a name of Dockerfile
 ```
 I tell docker to download the image from docker hub 
 I then want to copy the project directory into the container
@@ -70,19 +71,19 @@ CMD ["python", "nelanisthebiggestpintosfanb.py"]
 ```
 
 
-### To build the docker file
+### DOCKER: To build the docker file
 ```
 docker build --file Dockerfile
 ```
 
-#### How to create an image from the docker file make sure you are within your docker project because it will search
+#### DOCKER: How to create an image from the docker file make sure you are within your docker project because it will search
 #### for the dockerfile
 ```
 docker build .
 ```
 
 
-### Container
+### DOCKER: Container
 ```
 A container is a running instance of an image
 To run an nginx container:
@@ -92,53 +93,54 @@ To run an nginx container:
 docker pull nginx
 ```
 
-### WORKDIR
+### DOCKER: WORKDIR
 ```
 sets the current working directory in the container
 ```
-### Check if there is any running container
+
+### DOCKER: Check if there is any running container
 ```docker
 docker ps
 ```
 
 
-### To see the list of running images
+### DOCKER: To see the list of running images
 ```docker
 docker images
 ```
 
-### How To Spin a new container e.g. in this case I am spinning a redis container
+### DOCKER: How To Spin a new container e.g. in this case I am spinning a redis container
 ```docker
 docker run redis
 ```
 
-### run the latest container from an image
+### DOCKER: run the latest container from an image
 ```docker
 docker run imagename:tag
 docker run nginx:latest
 ```
 
-### Query The list of Running Containers
+### DOCKER: Query The list of Running Containers
 ```docker
 docker container ls
 ```
 
-### Stop A Running Container Container id is a numerical value
+### DOCKER: Stop A Running Container Container id is a numerical value
 ```docker
 docker stop containerid
 ```
 
-### Map Ports From Local Machine to Container here mapping port 256837 on my local machine to port 80 on the container
+### DOCKER: Map Ports From Local Machine to Container here mapping port 256837 on my local machine to port 80 on the container
 ```docker
 docker run -d 256837:80 nginx:latest
 ```
 
-### How To Map Multiple Ports -d means in detached mode
+### DOCKER How To Map Multiple Ports -d means in detached mode
 ```docker
 docker run -d -p 3000:80 -p 8080:80 nginx:latest
 ```
 
-### How To Restart A Container
+### DOCKER: How To Restart A Container
 ```docker
 docker stop 252656837c263727
 docker start 252656837c263727
@@ -151,13 +153,13 @@ docker start 252656837c263727
 docker ps -a
 ```
 
-### Sometimes some users phone do not support the latest version which is 5.0 and you want to keep version 4.0 so you can run the image 4.0 and 5.0 the bottom command pulls and start container
+### DOCKER: Sometimes some users phone do not support the latest version which is 5.0 and you want to keep version 4.0 so you can run the image 4.0 and 5.0 the bottom command pulls and start container
 ```docker
 docker run redis:4.0
 ```
 
 
-### Ports 
+### DOCKER: Ports 
 ```
 I must create a binding port between my local machine and the container.
 So say my container is listening on port 3000 I must bind the listening
@@ -169,7 +171,7 @@ HOWEVER IF YOU TWO DIFFERENT PORTS ON YOUR MACHINE TO THE SAME PORT IN THE CONTA
 ```
 
 
-### DEBUGGING CONTAINERS
+### DOCKER: DEBUGGING CONTAINERS
 ```docker
 docker logs
 ```
