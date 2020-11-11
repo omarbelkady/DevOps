@@ -179,3 +179,123 @@ docker logs
 ```docker
 docker exec -it
 ```
+
+## Kubernetes
+- Open Source container Orchestration Tool
+- Helps manage containerized applications in different deployment environments(phy, vir, hybrid)
+- Heavily used in small independent applications e.g. Microservices
+- No downtime, scalability(high response), disaster recovery
+
+## K8s Components
+- Volumes
+- Secrets
+- ConfigMap
+- Deployment
+- Ingress
+- Pod
+- Service
+- StatefulSet
+
+```
+- Node: simple server, vm
+- Pod: Smallest Unit in K8s it is an abstraction over a container
+- Usually I reserve 1 pod per application
+- Each Pod Gets Its own IP Address
+```
+
+### Pods
+```
+Communicate with each other using a service
+
+Example Say my-app pod uses a service called mongo-db-service to communicate with the DB
+Layer of abstraction on top of a container. Dep
+```
+
+
+### Service
+```
+a static ip address/permanent ip address that can be attached to each pod.
+a pod will have its own service and the database will have its own service
+
+Lifecycle of the pod and the service are not connected. If the pod dies, the 
+service and the ip address will stay
+```
+
+### Deployments
+```
+blueprints for the application pod and allow us to scale up and scale down 
+a number of replicas we need. A layer of abstraction on top of pods.
+
+In practice I use Deployments and not pods
+```
+
+### External service
+```
+for your application to run in the browser I must create an external service.
+External service is a service that opens the communication from external sources.
+Db should not be external because it would be accessible by the public.
+Therefore, I create an internal service.
+
+```
+
+### Stateful Set
+```
+This is used for Stateful apps. Stateful set is meant for applications 
+like databases(mysql, mongodb, elastic search). I should use Stateful
+Set to create these types of applications and not deployments. Stateful
+set will know how to take care of pods and scaling them up. Deploying
+DB applications using stateful sets in K8s cluster can be tedious at times.
+It is definitely harder to work with than Deployments. I must always
+remember to host db applications outside the K8s cluster and have just the 
+deployments/stateless applications which replicate and scale without 
+any error raised inside the k8s cluster. Now that both my nodes are load
+balanced, it is clearly easy to notice that my setup is more robust and if
+node 1 server was rebooted/crashed and nothing can run on it, I would always 
+have a 2nd node aka node 2 server with application and database running on
+it. The application in the 2nd node would still be accessible by the user until
+the two replicas get recreated this prevents downtime.
+
+```
+    
+### Ip Address Ingress
+```
+I want my application to have a secure protocol and a domain name
+NOT my Ip which is why I use Ingress. This is used to route
+traffic to the cluster.
+```
+
+### External Configuration Type1: ConfigMap
+```
+ConfigMap is your external configuration to your application.
+ConfigMap contains configuration data such as: URLs of DB, other services
+How To Use ConfigMap in K8s: Connect it to the Pod so that the pod gets the data that ConfigMap contains
+```
+
+### External Configuration Type2: Secret
+```
+Similar to ConfigMap except that it is used to store secret data: credentials
+and store not in plain text format but in base64 encoded. 
+Things that go in the Secret e.g. certificates, passswords, etc.
+
+How to make secret talk talk to pod: connect it for it to know who to authenticate
+```
+
+
+### Volumes
+```
+Attaches a physical Storage on a harddrive to the pod. This storage can be on a 
+local machine, remote storage(outside of the k8s cluster). This is used for data
+persistence
+```
+
+
+### Safety
+```
+Imaging everything is running perfectly and a user can access the application through the browser. 
+Imagine the application pod crashes/dies, because there was a new container image built.
+This would trigger downtime which would prevent a user from using the application.
+The beauty is that k8s is always replicating everything on multiple server. There would always
+be a parallel node running which would be a clone of the application 
+```
+
+### Kubernetes Architecture
