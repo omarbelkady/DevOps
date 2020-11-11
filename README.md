@@ -219,6 +219,8 @@ a pod will have its own service and the database will have its own service
 
 Lifecycle of the pod and the service are not connected. If the pod dies, the 
 service and the ip address will stay
+
+Communication between Nodes is done through Services
 ```
 
 ### Deployments
@@ -299,3 +301,43 @@ be a parallel node running which would be a clone of the application
 ```
 
 ### Kubernetes Architecture
+```
+main components of K8s architecture are worker nodes/servers and each node
+will have multiple application pods with containers running on that specific
+node.
+Every node MUST have preinstalled three processes that used to manage and schedule the pods:
+
+Nodes are the cluster servers that actually do the work aka worker nodes
+
+```
+- Process #1: Container Runtime
+- Process #2: Kubelet this interacts with both the container and node
+Kubelet start the pod with a container inside
+- Process #3: Kube Proxy(must be installed on every K8s worker node) is used to forward requests and must be installed on every node
+
+
+### How To Interract with a cluster
+```
+Thanks to Master Nodes is how Interract with a cluster.
+A Master Node Controls the Cluster State and the worker nodes
+```
+
+### Master node processes or service that run in this chronological order
+1- API Server: when I(user) want to deploy a new app in k8s cluster I interract with the api server through a client(UI, CLI, API). API Server is aka a the cluster gateway. Also it
+is a gatekeeper for authentication 
+2- Scheduler: send an API server a request to schedule a new pod. The API Server 
+validates my request first then hands it over to the scheduler in order to start the application pod
+on one of the worker nodes.Scheduler has a intelligent feature built into it to decide 
+on which specific worker node the next pod will be scheduled. Scheduler just decides on
+which node the new pod will be scheduled
+3- Controller Manager: Detects State Changes(e.g. Pods Crashing) and tries to recover the 
+cluster state. It makes a request to the Scheduler to reschedule the deadd pods and the 
+scheduler decides based on the resource calculation which worker nodes whould restart
+the pods again and makes a request to the corresponding kubelet.
+4- etcd: This is a key value store of a cluster state or is the cluster brain. Any changes
+happening in the cluster gets saved in this key value store. The application data is not 
+stored in the etcd.
+
+### Sample Cluster Setup
+- 2 Master Nodes(use less resources e.g. CPU, RAM and Storage)
+- 3 Worker Nodes(use more resources )
