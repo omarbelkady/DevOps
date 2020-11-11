@@ -336,8 +336,192 @@ scheduler decides based on the resource calculation which worker nodes whould re
 the pods again and makes a request to the corresponding kubelet.
 4- etcd: This is a key value store of a cluster state or is the cluster brain. Any changes
 happening in the cluster gets saved in this key value store. The application data is not 
-stored in the etcd.
+stored in the etcd. Etcd holds the current status of any K8s component.
 
 ### Sample Cluster Setup
 - 2 Master Nodes(use less resources e.g. CPU, RAM and Storage)
-- 3 Worker Nodes(use more resources )
+- 3 Worker Nodes(use up more resources)
+
+### How To Add A New Master/Node Server to your application
+- get a new bare server
+- install all the master/node processes
+- add it to the cluster
+
+
+### Minikube and Kubectl
+#### Minikube
+```
+In K8s world, when I am ready to setup a K8s cluster in production I would have at least 2 
+master nodes and multiple worker nodes. Instead of running my entire application which will
+require an enormous amount of memory and needs a lot of resources allocated to it. I use a
+minikube. Minikube is a one node K8s cluster where the master processes and the node processes 
+both run on the same machine aka the same node.
+```
+
+#### Kubectl
+```
+One of the master processes called API Server is actually the main entry point into the K8s cluster.
+
+To Talk to the api server is through a client e.g. UI, K8s API or a CL Tool(Kubectl)
+
+Kubectl can control a MiniKube cluster, cloud cluster or hybrid cluster
+```
+
+### Kubectl commands
+
+
+#### How to create a component
+```bash
+kubectl create [whatyouwanttocreategoeshere]
+```
+
+#### How to create a deployment
+```bash
+kubectl create deployment NAME --image=image [--dry-run] [options]
+```
+
+#### How To Create A Nginx deployment
+```bash
+kubectl create deployment nginx-depl --image=nginx
+```
+
+#### How To Modify a deployment
+```bash
+kubectl edit deployment [nameofdeployment] 
+```
+
+#### How To Delete A Deployment
+```bash
+kubectl delete deployment [nameOfDeployment]
+```
+
+#### Configuration File
+Every Configuration File Has Three Parts to It and syntax for yaml files is strict indentation
+- metadata: contains the labels
+- specification aka spec have attributes specific to the kind of: contains the selectors 
+- status-Automatically generated and started by K8s Desired state and actual state must equal or K8s will now that it must fix it
+
+#### Sample Configuration File -- nelanlovescstsfnginx-deployment.yaml
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+    name: nginx-deployment
+    labels: 
+spec:
+    replicas: 2
+    selector: 
+        matchLabels:
+            app: nginx
+    template:
+        metadata: 
+            labels:
+                app: nginx
+        spec:
+            containers:
+            - name: nginx
+              image: nginx:1.16
+              ports:
+              - protocol: TCP
+                port:
+                - containerPort: 8080
+
+```
+```
+The service is accessible at a different port than deployment. This is because each one
+must send a separate request. Say the DB Service sends a request to the Nginx Service
+it will need to send it on say port 80. The service must also know to which pod it should
+forward the request because different pods listen on a unique port within the container
+this is the targetPort key-value pair. 
+
+```
+
+#### How To Check that the service in the pod has been assigned to the right port
+```bash
+kubectl describe service nginx-service
+```
+
+#### How To Get more information about a pod's endpoint and ip address forwarded to
+```bash
+kubectl get pod -o wide
+```
+
+
+#### Sample Configuration File -- nelanlovescstsfnginx-service.yaml
+```yaml
+apiVersion: apps/v1
+kind: Service
+metadata: 
+    name: nginx-service
+spec:
+    selector:
+        app: nginx 
+    ports:
+        protocol: TCP
+        port: 80
+        targetPort: 8080
+```
+
+### How to connect Services To Deployments
+```
+Within the yaml file within the metadata section there is labels and a key of app and a value of nginx
+Within the service yaml file within spec section there is selector and a key of app and a value of nginx
+
+Service must know which pods are registred with it. The connection is made through the selector of the label
+```
+### How to connect deployment to pods
+```
+pods get the label through the template blueprint. The label in metadata is matched
+with the selector in the specification. This is done so that we know which pod belongs
+to it.
+```
+### Blueprint for Pods
+- A Template is a blueprint for a pod
+
+#### How To Apply A Configuration File -f is file cstsf=cs375 K8s will now whether to create or update    
+```bash
+kubectl apply -f config-cstsffb-file.yaml
+```
+
+#### Check if we have any pods running
+```bash
+kubectl get pod
+```
+### Useful Debuging Commands In K8s
+#### Debug A Pod
+```bash
+kubectl logs [podname] 
+```
+
+#### Get Additional Information on a Pod useful when a pod is not starting
+```bash
+kubectl describe pod [podname]
+```
+
+#### Exec- gets the interactive terminal of the application container using the it abbreviation
+```bash
+kubectl exec -it [podname] -- bin/bash
+```
+
+#### Check if there are any services running
+```
+kubectl get services
+```
+
+#### Replicaset: Manages the replicas of a pood
+```
+kubectl get replicaset
+```
+
+#### Get the status of different kubernetes components of your choice(node, or pod or replicaset)
+```
+kubectl get nodes|pod|services|replicaset|deployment
+```
+
+#### Layers of Abstraction in K8s
+```
+Deployment manages a ReplicaSet
+ReplicaSet manages all the replicas of that Pod
+Pod is an abstraction of a container
+Everything below Deployment is managed by Kubernetes
+```
