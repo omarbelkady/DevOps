@@ -325,15 +325,15 @@ A Master Node Controls the Cluster State and the worker nodes
 ### Master node processes or service that run in this chronological order
 1- API Server: when I(user) want to deploy a new app in k8s cluster I interract with the api server through a client(UI, CLI, API). API Server is aka a the cluster gateway. Also it
 is a gatekeeper for authentication 
+
 2- Scheduler: send an API server a request to schedule a new pod. The API Server 
-validates my request first then hands it over to the scheduler in order to start the application pod
-on one of the worker nodes.Scheduler has a intelligent feature built into it to decide 
-on which specific worker node the next pod will be scheduled. Scheduler just decides on
-which node the new pod will be scheduled
+validates my request first then hands it over to the scheduler in order to start the application pod on one of the worker nodes.Scheduler has a intelligent feature built into it to decide on which specific worker node the next pod will be scheduled. Scheduler just decides on which node the new pod will be scheduled
+
 3- Controller Manager: Detects State Changes(e.g. Pods Crashing) and tries to recover the 
 cluster state. It makes a request to the Scheduler to reschedule the deadd pods and the 
 scheduler decides based on the resource calculation which worker nodes whould restart
 the pods again and makes a request to the corresponding kubelet.
+
 4- etcd: This is a key value store of a cluster state or is the cluster brain. Any changes
 happening in the cluster gets saved in this key value store. The application data is not 
 stored in the etcd. Etcd holds the current status of any K8s component.
