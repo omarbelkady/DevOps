@@ -382,7 +382,8 @@ the need to create a separate cluster
 ```
 if your team(Team 1) and the other team(Team 2) are using the same cluster. Team1 deploys
 the app which is called cs375fb-deployment and this team(team1) has a certain configuration.
-If the other team(Team2) had their deployment named cs375fb-deployment too which is the same name of team1's deployment name even though Team 2 has a different configuration than
+If the other team(Team2) had their deployment named cs375fb-deployment too which is the same name 
+of team1's deployment name even though Team 2 has a different configuration than
 Team 1. If Team 2 deployed their configuration to the cluster they would overwrite Team 1's 
 deployment.
 
