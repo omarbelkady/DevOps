@@ -366,9 +366,13 @@ Imagine having a default namespace which is provided by K8s and I create all my 
 
 The proper way to use a namespace is to group namespace by their appropriate resource
     - database namespace: I deploy my database and its required resources here
+
     - Monitoring Namespace: This deploys Prometheus and all its required resources
+
     - Elastic Stack Namespace: This deploys Elastic Search and Kibana resources 
+    
     - Nginx-Ingress: This deploys Nginx-Ingress Resources
+    
     - Do not use a namespace if you are working on a small project and up to 10 users.
 - Working With Teams in one application which prevents conflicts between one another
 - A cluster which I want to host both staging and development environment. This is done
