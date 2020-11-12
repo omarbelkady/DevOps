@@ -364,7 +364,7 @@ stored in the etcd. Etcd holds the current status of any K8s component.
 Imagine having a default namespace which is provided by K8s and I create all my resources there in addition to the default namespaces that were shipped by K8s 
 -Component Structure: If I have a complex application which has multiple deployments which create replicas of many pods and I have resources such as services and ConfigMap. Sooner than later my default namespace will be filled with different components
 
-The proper way to use a namespace is to group namespace by their appropriate resource
+The proper way to use a namespace is to group namespace by their appropriate resource 
     - database namespace: I deploy my database and its required resources here
 
     - Monitoring Namespace: This deploys Prometheus and all its required resources
