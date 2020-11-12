@@ -359,25 +359,36 @@ stored in the etcd. Etcd holds the current status of any K8s component.
     - kube-node-lease: keeps a record of the hearbeats of nodes 
         - every node here in node-lease gets its own object in the namespace
     - default: used for you to create resources at the beginning
+- If you do not supply a namespace to a component it creates them in a default namespace
 #### Usecases Of A Namespace
-- Imagine having a default namespace which is provided by K8s and I create all my resources there in addition to the default namespaces that were shipped by K8s 
-- If I have a complex application which has multiple deployments which create replicas of many pods and I have resources such as services and ConfigMap. Sooner than later my default namespace will be filled with different components
-- The proper way to use a namespace is to group namespace by their appropriate resource
+Imagine having a default namespace which is provided by K8s and I create all my resources there in addition to the default namespaces that were shipped by K8s 
+-Component Structure: If I have a complex application which has multiple deployments which create replicas of many pods and I have resources such as services and ConfigMap. Sooner than later my default namespace will be filled with different components
+
+The proper way to use a namespace is to group namespace by their appropriate resource
     - database namespace: I deploy my database and its required resources here
     - Monitoring Namespace: This deploys Prometheus and all its required resources
     - Elastic Stack Namespace: This deploys Elastic Search and Kibana resources 
     - Nginx-Ingress: This deploys Nginx-Ingress Resources
-- Do not use a namespace if you are working on a small project and up to 10 users.
-- Working With Teams in one application
+    - Do not use a namespace if you are working on a small project and up to 10 users.
+- Working With Teams in one application which prevents conflicts between one another
 - A cluster which I want to host both staging and development environment. This is done
 because say I use nginx controller/elastic stack for logging, this will enable me 
 to deploy it in one cluster and use for both environments. This will save me the hassle
 of deployment both environment to two indepedent clusters. Staging now use both resources
 as well as the development environment
-- Blue/Green Development: Blue Production's version namespace is different than Green Production's
+Blue/Green Development: Blue Production's version namespace is different than Green Production's
 version namespace. Blue's Production is active and Green is the subsequent Production version.
 Before deployment when they are both in Production they both use the same resources this prevents
-the need to create a separate cluster   
+the need to create a separate cluster
+
+- Access And Resource Limits On Namespaces:
+    - 2 Teams working on the same cluster which means each team has their own Namespace.
+    I as a PM can give each team member the appropriate access. Say Team Member A who is in Team 1 only has access to namespace cs375fb and Team Member B who is in Team 2 only has
+    access to namespace bfloboc. Team member A(cs375fb) and B(bfloboc) only have CRUD abilities in their own 
+    namespace.
+    - Each team has their own secured and isolated environments
+    - I can also limit the number of resources a Namespace uses: e.g. CPU, RAM, Storage cap per NS. Set a quota per namespace
+
 #### Error you can reach if you are on Team 1 and there is Team 2 also working on an app
 ```
 if your team(Team 1) and the other team(Team 2) are using the same cluster. Team1 deploys
@@ -389,7 +400,27 @@ deployment.
 Even if Team 2 had Jenkins to automate their tasks they wouldn't know they disrupted another
 team's deployment. To avoid such conflicts I use namespaces so that each team can work on their
 own namespace without disrupting another team's progress.
+```
 
+- Cannot access most resources from another namespace
+    - Say I have ConfigMap in Project 26265 namespace which references the db service
+    - I cannot use that ConfigMap in Project 27375 namespace 
+    - Instead I have to create the same configMap in Project 27375 that references the db service
+- I can only access service in another namespace
+
+### Some Components cannot be created with a namespace
+```
+Volumes and nodes do not live independent in a namespace they live globally within the cluster
+```
+
+### List the resource not bound to a namespace
+```
+kubectl api-resources --namespace=false
+```
+
+### List the resource bound to a namespace
+```
+kubectl api-resources --namespace=true
 ```
 
 #### How To Create A Namespace 1st Way
@@ -401,6 +432,35 @@ kubectl create namespace nameOfYourNamespaceYouWishToCreate
 #### How To Create A Namespace 2nd Way Using A Config File(Best And Recommended)
 ```bash
 kubectl create namespace nameOfYourNamespaceYouWishToCreate
+```
+
+#### 1- How To Create A ConfigMap(the configuration file) Within Your Name selected namespace
+```bash
+kubectl apply -f llpfb-configmap.yaml --namespace=pintosfb-namespace
+```
+
+#### 2- How To Create A ConfigMap(the configuration file) Within A Custom Named namespace(recommended)
+```
+Within your configuration file(.yaml file) inside the metadata tag there insert a namespace
+subtag with the name you wish to give your namespace
+```
+
+
+#### How To Know which namespace you are on.. to install npm install kubens
+```bash
+kubens
+```
+
+#### Change the active namespace kubens(the default ns is default)
+```bash
+kubens namespaceyouwishtodivertto
+```
+
+
+
+#### kubectx Command: Change the active cluster 
+```bash
+kubectx
 ```
 
 #### Display the List Of Namespace In the Cluster
