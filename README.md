@@ -347,6 +347,67 @@ stored in the etcd. Etcd holds the current status of any K8s component.
 - install all the master/node processes
 - add it to the cluster
 
+### Namespace
+- can organize resources in namespaces
+- can have multiple namespaces within a cluster
+- Things that are deployed in a namespace are: system processes, 
+- I can think of a namespace as a nested cluster. This means a virtual cluster within a cluster
+- When you create a cluster K8s gives you 4 Namespaces by default
+    kubernetes-dashboard: shipped automatically with minikube this doesn't exist std cluster
+    - kube-system: we are not supposed to create or modify anything in kube-system 
+    - kube-public: has publicely accessible data and has a configMap which contains cluster info
+    - kube-node-lease: keeps a record of the hearbeats of nodes 
+        - every node here in node-lease gets its own object in the namespace
+    - default: used for you to create resources at the beginning
+#### Usecases Of A Namespace
+- Imagine having a default namespace which is provided by K8s and I create all my resources there in addition to the default namespaces that were shipped by K8s 
+- If I have a complex application which has multiple deployments which create replicas of many pods and I have resources such as services and ConfigMap. Sooner than later my default namespace will be filled with different components
+- The proper way to use a namespace is to group namespace by their appropriate resource
+    - database namespace: I deploy my database and its required resources here
+    - Monitoring Namespace: This deploys Prometheus and all its required resources
+    - Elastic Stack Namespace: This deploys Elastic Search and Kibana resources 
+    - Nginx-Ingress: This deploys Nginx-Ingress Resources
+- Do not use a namespace if you are working on a small project and up to 10 users.
+- Working With Teams in one application
+- A cluster which I want to host both staging and development environment. This is done
+because say I use nginx controller/elastic stack for logging, this will enable me 
+to deploy it in one cluster and use for both environments. This will save me the hassle
+of deployment both environment to two indepedent clusters. Staging now use both resources
+as well as the development environment
+- Blue/Green Development: Blue Production's version namespace is different than Green Production's
+version namespace. Blue's Production is active and Green is the subsequent Production version.
+Before deployment when they are both in Production they both use the same resources this prevents
+the need to create a separate cluster   
+#### Error you can reach if you are on Team 1 and there is Team 2 also working on an app
+```
+if your team(Team 1) and the other team(Team 2) are using the same cluster. Team1 deploys
+the app which is called cs375fb-deployment and this team(team1) has a certain configuration.
+If the other team(Team2) had their deployment named cs375fb-deployment too which is the same name of team1's deployment name even though Team 2 has a different configuration than
+Team 1. If Team 2 deployed their configuration to the cluster they would overwrite Team 1's 
+deployment.
+
+Even if Team 2 had Jenkins to automate their tasks they wouldn't know they disrupted another
+team's deployment. To avoid such conflicts I use namespaces so that each team can work on their
+own namespace without disrupting another team's progress.
+
+```
+
+#### How To Create A Namespace 1st Way
+```bash
+kubectl create namespace nameOfYourNamespaceYouWishToCreate
+```
+
+
+#### How To Create A Namespace 2nd Way Using A Config File(Best And Recommended)
+```bash
+kubectl create namespace nameOfYourNamespaceYouWishToCreate
+```
+
+#### Display the List Of Namespace In the Cluster
+```bash
+kubectl get namespace 
+```
+
 
 ### Minikube and Kubectl
 #### Minikube
