@@ -231,6 +231,32 @@ a number of replicas we need. A layer of abstraction on top of pods.
 In practice I use Deployments and not pods
 ```
 
+### Ingress
+```
+Within a K8s cluster there is a pod of the application with its corresponding service.
+For a UI Application I must have access to the pod and service through the browser so that
+external requests reach my application. One way to do this is to use an external service. The most common way is to have secure connection(https) and the domain name. 
+
+The way that K8s allows this to happen is using the K8s component called K8s Ingress instead
+having an external service I would have an internal service.
+
+Ingress does not expose my port or ip address to the public instead it hides and enforces
+some routing rules however. The request MUST BE forwarded to the internal service. when
+the user enter the host as specified in the configuration the user is redirected to the service.
+
+within the spec tag there is rules sub-tag and within the rules sub-tag there is another sub-tag called host. Host is the domain as specified by the user.
+
+within the host there is a sub-tag called http
+
+Within http there is a sub-tag called paths.
+Paths is where I want to forward my requests to  https://my-app.com/paths
+the http within the in the host subtag is not the http protocol in the browser.
+It is the incoming request which gets forwarded to the internal service.
+
+
+```
+- http://my-app-service-ip:port
+
 ### External service
 ```
 for your application to run in the browser I must create an external service.
