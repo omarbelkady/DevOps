@@ -203,6 +203,9 @@ docker exec -it
 - Each Pod Gets Its own IP Address
 ```
 
+
+
+
 ### Pods
 ```
 Communicate with each other using a service
@@ -230,6 +233,18 @@ a number of replicas we need. A layer of abstraction on top of pods.
 
 In practice I use Deployments and not pods
 ```
+
+#### Common uses Of Deployments:
+- Database Applications(MongoDB, MySQL)
+- Elastic Search
+- Monitoring Applications(e.g. Prometheus)
+
+#### Different Ways To Search For A Deployment
+- helm search <keyword>
+- helm hub
+- Helm charts pages
+
+
 
 ### Ingress
 ```
@@ -676,4 +691,99 @@ Deployment manages a ReplicaSet
 ReplicaSet manages all the replicas of that Pod
 Pod is an abstraction of a container
 Everything below Deployment is managed by Kubernetes
+```
+
+#### What is Helm in K8s
+```
+a package manager for K8s
+```
+
+#### Helm Charts 
+I have an application with multiple microservices and I am deploying them to my K8s cluster
+- The deployment and service of each of the microservices are pretty much the same with the exception to the application name and version. 
+Instead of creating each microservice from scratch everytime
+    - I can define a common blueprint for all the microservices and make the dynamic values replaced by placeholder.
+    This would be the template file.
+
+I can define the template values as such in my values.yaml file
+```yaml
+name: my-app
+container:
+	name: my-app-container
+	image: my-app-image
+	port: 9000
+```
+
+This is the template-config.yaml file
+```yaml
+- name: {{ .Value.container.name }}
+- image: {{ .Value.container.image }}
+- port: {{ .Value.container.port }}
+```
+
+
+### Helm Chart Structure
+Directory Structure of a Chart:
+myChart/
+	Chart.yaml
+	values.yaml
+	charts/
+	templates/
+	...
+
+- Chart.yaml: Contains all the meta information(name, information, list of dependencies, version) about the chart
+
+- Values.yaml: Where the values are configured for the template files. These values are going to be the default values which can be overriden later.
+
+- Chart Folder: Will have the charts dependencies inside 
+
+- Templates folder: this is where the template files are actually stored 
+
+When I run the command helm install <chartName> to deploy the YAML files into K8s the template files will be filled with the values from the values.yaml file producing valid K8s manifest that can be deployed to K8s. I can have other optional files in this chart such as README.md or license 
+
+```bash
+helm install <chartName>
+```
+
+
+
+### Values Injection Into Template Files
+Say within my values.yaml file which is the default value configuration file which has three values: 
+- imageName
+- port
+- version
+
+
+### I can supply other yaml values with the command by using the values flag:
+```bash
+helm install --values=my-values.yaml <chartname>
+```
+
+
+### Release Management in K8s 
+
+After the 2nd version is deployed Helm version branches into two parts:
+- Helm Client(helm cli)
+- Helm Server(Tiller)
+
+So whenever I deploy a helm chart using the command 
+```bash
+helm install <chartname> 
+```
+Helm client will send the yaml file to the server(Tiller) WHICH MUST RUN IN a K8 Cluster. 
+Tiller will then execute this request and create components from this YAML file within the K8 cluster
+
+HOW IT WORKS:
+The way Helm Client/Server works is whenever I create/modify a deployment Tiller will store a copy of each configuration client for future reference.
+This will as a result create a history of chart executions.
+
+To upgrade I run the command 
+```bash
+helm upgrade <chartname>
+```
+This brings the benefits of version control in case there was a new version released and had a bunch of bugs I can rollback easily using the command 
+
+### How To Rollback
+```bash
+helm rollback <chartname> 
 ```
