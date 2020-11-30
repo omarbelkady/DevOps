@@ -1,10 +1,18 @@
 # DevOps
 
 ## Docker
+### Dockerfile
+```
+A Dockerfile is a blueprint for building a docker image
+```
+
 ### Images
 ```
 An image is a template for creating an environment of your choice. This environment can be a DB, Web App
 or an App that does some time of processing.
+
+AKA
+An image is a template for running docker containers.
 
 An image is also a snapshot a version at any specific moment in time.
 Imagine I deploy an image to production and my application was not error free. I can always
@@ -19,6 +27,13 @@ by adding/changing or removing files and dirs
 
 It is worth remembering that every layer contains a large difference between its preceding layer in the
 stack.
+
+Images can be uploaded to the cloud in both public and private registries
+```
+
+### Container
+```
+A container is just a running process of an image
 ```
 
 ### DOCKER: How To Create A Docker Image 
