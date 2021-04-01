@@ -288,15 +288,16 @@ docker-machine ssh myvm1 "docker stack deploy -c <file> <app>"
 
 ### Images
 ```
-An image is a template for creating an environment of your choice. This environment can be a DB, Web App
-or an App that does some time of processing.
+An image is a read-only template for creating an environment of your choice. In other words, it is a set of instructions
+for creating a container. This environment can be a DB, Web App or an App that does some time of processing.
 
 AKA
 An image is a template for running docker containers.
+The image has instructions on how to run the mini servers(aka containers)
 
 An image is also a snapshot a version at any specific moment in time.
-Imagine I deploy an image to production and my application was not error free. I can always
-roll back to the previous image.
+Imagine I deploy an image to production and my application was not error free.
+I can always roll back to the previous image.
 An image contains all the necessities for my application to run: OS, Software and Application Code.
 
 The first layer in the stack is called the base image it can be: a basic OS(e.g. Ubuntu, Debian, Fedora), prepackaged sdk
@@ -313,7 +314,7 @@ Images can be uploaded to the cloud in both public and private registries
 
 ### Container
 ```
-A container is just a running process of an image
+A container is just a running process/instance of an image. We can also regard a container as a mini server running on your computer.
 ```
 
 ### DOCKER: How To Create A Docker Image 
