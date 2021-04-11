@@ -1,6 +1,10 @@
 # DevOps
 
 ## Docker
+
+##### Smallest Deployable unit in Docker
+- Containers
+
 ### Dockerfile
 ```
 A Dockerfile is a blueprint for building a docker image
@@ -288,33 +292,35 @@ docker-machine ssh myvm1 "docker stack deploy -c <file> <app>"
 
 ### Images
 ```
-An image is a read-only template for creating an environment of your choice. In other words, it is a set of instructions
-for creating a container. This environment can be a DB, Web App or an App that does some time of processing.
+An image is a read-only template for creating an environment of your choice. In other words, 
+it is a set of instructionsfor creating a container. This environment can be a DB, Web App 
+or an App that does some time of processing.
 
 AKA
 An image is a template for running docker containers.
 The image has instructions on how to run the mini servers(aka containers)
 
-An image is also a snapshot a version at any specific moment in time.
-Imagine I deploy an image to production and my application was not error free.
-I can always roll back to the previous image.
-An image contains all the necessities for my application to run: OS, Software and Application Code.
+An image is also a snapshot a version at any specific moment in time. Imagine I deploy 
+an image to production and my application was not error free.I can always roll back 
+to the previous image. An image contains all the necessities for my application
+ to run: OS, Software and Application Code.
 
-The first layer in the stack is called the base image it can be: a basic OS(e.g. Ubuntu, Debian, Fedora), prepackaged sdk
-or application(e.g. Python or Nginx) or a custom image I created.
+The first layer in the stack is called the base image it can be: a basic OS(e.g. Ubuntu, Debian, 
+Fedora), prepackaged sdk or application(e.g. Python or Nginx) or a custom image I created.
 
-On top of the base image docker can stack any number of additional layers that modifying the base image
-by adding/changing or removing files and dirs
+On top of the base image docker can stack any number of additional layers that modifying the base 
+image by adding/changing or removing files and dirs
 
-It is worth remembering that every layer contains a large difference between its preceding layer in the
-stack.
+It is worth remembering that every layer contains a large difference between its preceding layer
+ in the stack.
 
 Images can be uploaded to the cloud in both public and private registries
 ```
 
 ### Container
 ```
-A container is just a running process/instance of an image. We can also regard a container as a mini server running on your computer.
+A container is just a running process/instance of an image. 
+We can also regard a container as a mini server running on your computer.
 ```
 
 ### DOCKER: How To Create A Docker Image 
@@ -450,37 +456,63 @@ docker exec -it
 ```
 
 ## Kubernetes
-- Open Source container Orchestration Tool
+- Open Source container Orchestration Tool aka Application(Container) Orchestrator
+- Solves the problem by deploying a full blown application to a node levels up and down automatically
+- We deploy containers into nodes
+- More users using my applications calls for an increased demand in resources 
+- K8s solves the problems by creating automatically for me the same node with the same number of resources
 - Helps manage containerized applications in different deployment environments(phy, vir, hybrid)
 - Heavily used in small independent applications e.g. Microservices
 - No downtime, scalability(high response), disaster recovery
+- Scales up and down my resources depending on demand
+
 
 ## K8s Components
-- Volumes
-- Secrets
-- ConfigMap
-- Deployment
+- Volumes: A dir accessible to all containers running in a pod
+- Secrets: storage and management of sensitive info
+- ConfigMap:  API object that lets you store configuration for other objects to use.
+- Deployment: desc of app lifecycle i.e. which images to use, # of pods to use, way of update
 - Ingress
-- Pod
+- Pod: Smallest Unit in K8s it is an abstraction over a container
 - Service
 - StatefulSet
-
 ```
-- Node: simple server, vm
-- Pod: Smallest Unit in K8s it is an abstraction over a container
+- Node: simple server, vm, physical Machine
+
+- Cluster: a set of nodes which can be running on the cloud i.e. aws, azure, google cloud or even on-premises
 - Usually I reserve 1 pod per application
 - Each Pod Gets Its own IP Address
 ```
 
 
+### Versioning
+- Say I have a new version aka version 2.0
+- K8s will create a new node running v2 in the container and destroys v1 node
 
 
 ### Pods
 ```
+This is the smallest deployable unit in K8s and not containers
+
+Think of a pod as a gigantic storage unit and within the unit there is a storage container
+
+Within the unit there is an init container.. An init container is exec before the main container
+
+Side containers are containers that support your main container
+
+Within the container we might have volumes 
+
 Communicate with each other using a service
 
 Example Say my-app pod uses a service called mongo-db-service to communicate with the DB
-Layer of abstraction on top of a container. Dep
+Layer of abstraction on top of a container.
+
+Instead of having a container(pod) per node. K8s optimizes my application
+by enabling me to have multiple pods per node
+
+K8s will then orchestrate the cluster for me
+
+A Pod has a unique IP address
 ```
 
 
@@ -597,7 +629,7 @@ How to make secret talk talk to pod: connect it for it to know who to authentica
 ```
 Attaches a physical Storage on a harddrive to the pod. This storage can be on a 
 local machine, remote storage(outside of the k8s cluster). This is used for data
-persistence
+persistence aka how pods share data in between them
 ```
 
 
@@ -619,6 +651,7 @@ Every node MUST have preinstalled three processes that used to manage and schedu
 
 Nodes are the cluster servers that actually do the work aka worker nodes
 
+Master node has the control plane
 ```
 - Process #1: Container Runtime
 - Process #2: Kubelet this interacts with both the container and node
@@ -631,13 +664,19 @@ Kubelet start the pod with a container inside
 Thanks to Master Nodes is how Interract with a cluster.
 A Master Node Controls the Cluster State and the worker nodes
 ```
+### Interract with a cluster via the cli
+```bash
+kubectl get nodes
+```
+
 
 ### Master node processes or service that run in this chronological order
 1- API Server: when I(user) want to deploy a new app in k8s cluster I interract with the api server through a client(UI, CLI, API). API Server is aka a the cluster gateway. Also it
 is a gatekeeper for authentication 
 
 2- Scheduler: send an API server a request to schedule a new pod. The API Server 
-validates my request first then hands it over to the scheduler in order to start the application pod on one of the worker nodes.Scheduler has a intelligent feature built into it to decide on which specific worker node the next pod will be scheduled. Scheduler just decides on which node the new pod will be scheduled
+validates my request first then hands it over to the scheduler in order to start the application pod on one of the worker nodes.
+Scheduler has a intelligent feature built into it to decide on which specific worker node the next pod will be scheduled. Scheduler just decides on which node the new pod will be scheduled
 
 3- Controller Manager: Detects State Changes(e.g. Pods Crashing) and tries to recover the 
 cluster state. It makes a request to the Scheduler to reschedule the deadd pods and the 
@@ -649,8 +688,13 @@ happening in the cluster gets saved in this key value store. The application dat
 stored in the etcd. Etcd holds the current status of any K8s component.
 
 ### Sample Cluster Setup
-- 2 Master Nodes(use less resources e.g. CPU, RAM and Storage)
-- 3 Worker Nodes(use up more resources)
+- 2 Master Nodes(use less resources e.g. CPU, RAM and Storage)... This is the brain of the cluster where all the decision are made
+- 3 Worker Nodes(use up more resources)... heavy lifting and working takes place i.e. the running of your application
+
+### A Master Node & Worker Node
+- The master node and worker node communicate via a kubelet
+
+
 
 ### How To Add A New Master/Node Server to your application
 - get a new bare server
@@ -794,16 +838,37 @@ minikube. Minikube is a one node K8s cluster where the master processes and the 
 both run on the same machine aka the same node.
 ```
 
+#### How to start a cluster with 2 nodes(master and worker) off docker containers
+```
+minikube start --nodes=2
+```
+
+### View the status of the running nodes
+```
+minikube status
+```
+
 #### Kubectl
 ```
 One of the master processes called API Server is actually the main entry point into the K8s cluster.
 
-To Talk to the api server is through a client e.g. UI, K8s API or a CL Tool(Kubectl)
+To Talk to the api server is through a client e.g. UI, K8s API or a CLI Tool(Kubectl)
 
 Kubectl can control a MiniKube cluster, cloud cluster or hybrid cluster
+- CLI which enables me to run commands against my cluster
+    - Deploy an app
+    - Inspect
+    - Edit resources
+    - Debug
+    - View Logs
+    - etc.
 ```
+- Prereq: Docker + Minikube
+
 
 ### Kubectl commands
+
+
 
 
 #### How to create a component
@@ -819,6 +884,21 @@ kubectl create deployment NAME --image=image [--dry-run] [options]
 #### How To Create A Nginx deployment
 ```bash
 kubectl create deployment nginx-depl --image=nginx
+```
+
+### How To Create 2 Nodes off docker containers
+```bash
+kubectl start --nodes=2
+```
+
+### See the status of your K8s nodes
+```bash
+kubectl status
+```
+
+### View the pods running in your K8s cluster -A means all pods in all the namespaces
+```bash
+kubectl get pods -A
 ```
 
 #### How To Modify a deployment
