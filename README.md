@@ -600,6 +600,27 @@ it. The application in the 2nd node would still be accessible by the user until
 the two replicas get recreated this prevents downtime.
 
 ```
+
+
+#### Create A Stateful Set
+
+```bash
+kubectl create statefulset <statefulset-name> --image<image-name>
+```
+
+#### List StatefulSet
+
+```bash
+kubectl get statefulsets
+```
+
+
+#### Get StatefulSet Details
+
+```bash
+kubectl describe statefulset <statefulset-name>
+```
+
     
 ### Ip Address Ingress
 ```
@@ -822,10 +843,17 @@ kubens namespaceyouwishtodivertto
 kubectx
 ```
 
-#### Display the List Of Namespace In the Cluster
+#### Display the List Of Namespaces In the Cluster
 ```bash
-kubectl get namespace 
+kubectl get namespaces
 ```
+
+
+#### Switch Namespaces Temporary
+```bash
+kubectl -n <namespace-name> <command>
+```
+
 
 
 ### Minikube and Kubectl
